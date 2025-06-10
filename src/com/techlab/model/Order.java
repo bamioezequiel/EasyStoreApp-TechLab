@@ -1,5 +1,6 @@
 package com.techlab.model;
 
+import javax.sound.sampled.Line;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,30 +30,31 @@ public class Order {
         return "";
     }
 
-    public void showOrderItems() {
-        this.items.forEach(p -> System.out.println("----- Producto -----\n" + p.getProduct().showProduct() + " Quantity: " + p.getQuantity()));
-    }
-
     public String addItem(Product p, int quantity) {
         if(p.getStock() < quantity)
             return "❌ Stock insuficiente. Solo hay " + p.getStock() + " unidades disponibles.";
 
-        LineItem lItem = new LineItem(p, quantity);
+        LineItem lItem = searchProductInLineItem(p.getID());
+        if(lItem != null) {
+            lItem.setQuantity(lItem.getQuantity() + quantity);
+        } else {
+            lItem = new LineItem(p, quantity);
+            items.add(lItem);
+        }
 
-        items.add(lItem);
         costTotal += p.getPrice() * quantity;
+        p.setStock(p.getStock() - quantity);
 
         return "✅ Producto agregado al pedido: " + p.getName() + " x" + quantity;
     }
 
-    public String removeItem(int id_line_item) {
-        for (int i = 0; i < this.items.size(); i++) {
-            if(this.items.get(i).getID() == id_line_item) {
-                this.items.remove(i);
-            }
+    private LineItem searchProductInLineItem(int id_product) {
+
+        for (LineItem l : this.items) {
+            if(l.getProduct().getID() == id_product) return l;
         }
 
-        return "🗑️ Ítem eliminado correctamente del pedido.";
+        return null;
     }
 
     public double getCostTotal() {
@@ -60,7 +62,7 @@ public class Order {
     }
 
     public void setCostTotal(double costTotal) {
-        this.costTotal += costTotal;
+        this.costTotal = costTotal;
     }
 
     public int getID() {

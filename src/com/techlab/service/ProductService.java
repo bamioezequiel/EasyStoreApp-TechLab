@@ -1,6 +1,8 @@
 package com.techlab.service;
 
 import com.techlab.exception.NoProductsAvailableException;
+import com.techlab.model.Drink;
+import com.techlab.model.Food;
 import com.techlab.model.Product;
 import com.techlab.utils.Utils;
 import jdk.jshell.execution.Util;
@@ -12,65 +14,58 @@ import java.util.Set;
 
 public class ProductService {
 
-    public List<Product> products = new ArrayList<Product>();
+    private List<Product> products = new ArrayList<Product>();
     Scanner sc = new Scanner(System.in);
 
     public ProductService() {
-        this.products.add(new Product("Pepsi", 6, 15));
-        this.products.add(new Product("Cafe", 2, 20));
-        this.products.add(new Product("Medialuna", 5, 5));
-        this.products.add(new Product("Te", 1, 30));
     }
 
-    public String createProduct() {
-        String name = "";
-        double price = 0;
-        int stock = 0;
+    public String createProduct(String type) {
+        String name = Utils.validatePositiveString("📝 Ingrese el nombre del producto: ");
+        double price = Utils.validatePositiveDouble("💲 Ingrese el precio: ");
+        int stock = Utils.validatePositiveInt("📦 Ingrese el stock: ");
 
-        while (true) {
-            System.out.print("📝 Ingrese el nombre del producto: ");
-            name = sc.nextLine().trim();
-
-            if (!name.isEmpty()) break;
-
-            System.out.println("❌ El nombre no puede estar vacío. Intente nuevamente.");
-        }
-
-        while (true) {
-            System.out.print("💲 Ingrese el precio: ");
-            try {
-                price = Double.parseDouble(sc.nextLine());
-                if (price < 0) throw new NumberFormatException();
+        Product product;
+        switch (type) {
+            case "food":
+                product = createFood(name, price, stock);
                 break;
-            } catch (NumberFormatException e) {
-                System.out.println("❌ Entrada inválida. Ingrese un número positivo.");
-            }
-        }
-
-        while (true) {
-            System.out.print("📦 Ingrese el stock: ");
-            try {
-                stock = Integer.parseInt(sc.nextLine());
-                if (stock < 0) throw new NumberFormatException();
+            case "drink":
+                product = createDrink(name, price, stock);
                 break;
-            } catch (NumberFormatException e) {
-                System.out.println("❌ Entrada inválida. Ingrese un número entero positivo.");
-            }
+            default:
+                System.out.println("❌ Tipo de producto invalido. Solo se acepta 'Food' o 'Drink'.");
+                return "❌ No se pudo agregar el producto.";
         }
 
-        Product product = new Product(name, price, stock);
         products.add(product);
 
-        return "✅ Producto agregado exitosamente: " + product.showProduct();
+        return "✅ Producto agregado exitosamente: " + product.toString();
+    }
+
+    public Product createDrink(String name, double price, int stock) {
+        double liters = Utils.validatePositiveDouble("🧴 Ingrese los litros: ");
+        String containerType = Utils.validatePositiveString("📝 Ingrese el tipo de envase: ");
+
+        return new Drink(name, price, stock, liters, containerType);
+    }
+
+    public Product createFood(String name, double price, int stock) {
+        double weightGrams = Utils.validatePositiveDouble("🏋️️ Ingrese el peso: ");
+        int calories = Utils.validatePositiveInt("📦 Ingrese las calorias: ");
+
+        return new Food(name, price, stock, weightGrams, calories);
     }
 
     public void showProducts() {
+        if (products.isEmpty()) throw new NoProductsAvailableException();
+
         System.out.println("===== LISTA DE PRODUCTOS =====");
 
         if(this.products.isEmpty()) throw new NoProductsAvailableException();
 
         for(Product p : this.products) {
-            System.out.println(p.showProduct());
+            System.out.println(p.toString());
         }
     }
 
@@ -103,83 +98,68 @@ public class ProductService {
 
     public String updateProduct(Product p) {
         boolean finished = false;
-
+        boolean isTypeFood = p instanceof Food;
         while (!finished) {
-            int optionUpdate = Utils.askForValidOption(
-                    "\n🔧 Que deseas modificar?\n0 - Nombre 🏷️\n1 - Precio 💲\n2 - Stock 📦",
-                    Set.of(0, 1, 2)
-            );
+            int optionUpdate = -1;
+            if (p instanceof Drink) {
+                optionUpdate = Utils.askForValidOption(
+                        "\n🔧 Que deseas modificar?\n0 - Nombre 🏷️\n1 - Precio 💲\n2 - Stock 📦\n3 - Litros  🧪\n4 - Tipo de envase 🧴",
+                        Set.of(0, 1, 2, 3, 4)
+                );
+            } else if (p instanceof Food) {
+                optionUpdate = Utils.askForValidOption(
+                        "\n🔧 Que deseas modificar?\n0 - Nombre 🏷️\n1 - Precio 💲\n2 - Stock 📦\n3 - Peso 🏋️ \n4 - Calorias 🔥",
+                        Set.of(0, 1, 2, 3, 4)
+                );
+            }
 
             switch (optionUpdate) {
                 case 0:
                     System.out.println("📌 Nombre actual: " + p.getName());
-                    System.out.print("✍️ Ingrese el nuevo nombre: ");
-                    String newName = sc.nextLine();
+                    String newName = Utils.validatePositiveString("✍️ Ingrese el nuevo nombre: ");
+                    if (Utils.confirmChange(p.getName(), newName, "nombre")) p.setName(newName);
+                    break;
 
-                    int confirmName = Utils.askForValidOption(
-                            "❓ Confirmas cambiar el nombre de '" + p.getName() + "' a '" + newName + "'?\n1 - Confirmar ✅\n0 - Cancelar ❌",
-                            Set.of(0, 1)
-                    );
-
-                    if (confirmName == 1) {
-                        p.setName(newName);
-                        System.out.println("✅ Nombre actualizado.");
-                    } else {
-                        System.out.println("❌ Cambio cancelado.");
-                    }
-                break;
                 case 1:
-                    System.out.println("📌 Precio actual: $" + p.getPrice());
-                    System.out.print("💰 Ingrese el nuevo precio: ");
                     try {
-                        double newPrice = Double.parseDouble(sc.nextLine());
-                        if (newPrice < 0) {
-                            System.out.println("⚠️ El precio debe ser positivo.");
-                            break;
-                        }
-
-                        int confirmPrice = Utils.askForValidOption(
-                                "❓ Confirmas cambiar el precio de $" + p.getPrice() + " a $" + newPrice + "?\n1 - Confirmar ✅\n0 - Cancelar ❌",
-                                Set.of(0, 1)
-                        );
-
-                        if (confirmPrice == 1) {
-                            p.setPrice(newPrice);
-                            System.out.println("✅ Precio actualizado.");
-                        } else {
-                            System.out.println("❌ Cambio cancelado.");
-                        }
-
+                        System.out.println("📌 Precio actual: $" + p.getPrice());
+                        double newPrice = Utils.validatePositiveDouble("💰 Ingrese el nuevo precio: ");
+                        if (Utils.confirmChange(p.getPrice(), newPrice, "precio")) p.setPrice(newPrice);
                     } catch (NumberFormatException e) {
-                        System.out.println("❌ Entrada invalida. Ingresa un numero.");
+                        System.out.println("❌ Entrada inválida. Ingresa un número.");
                     }
-                break;
+                    break;
 
                 case 2:
-                    System.out.println("📌 Stock actual: " + p.getStock());
-                    System.out.print("📥 Ingrese el nuevo stock: ");
-
                     try {
-                        int newStock = Integer.parseInt(sc.nextLine());
-                        if (newStock < 0) {
-                            System.out.println("⚠️ El stock no puede ser negativo.");
-                            break;
-                        }
-
-                        int confirmStock = Utils.askForValidOption(
-                                "❓ Confirmas cambiar el stock de " + p.getStock() + " a " + newStock + "?\n1 - Confirmar ✅\n0 - Cancelar ❌",
-                                Set.of(0, 1)
-                        );
-
-                        if (confirmStock == 1) {
-                            p.setStock(newStock);
-                            System.out.println("✅ Stock actualizado.");
-                        } else {
-                            System.out.println("❌ Cambio cancelado.");
-                        }
-
+                        System.out.println("📌 Stock actual: " + p.getStock());
+                        int newStock = Utils.validatePositiveInt("📥 Ingrese el nuevo stock: ");
+                        if (Utils.confirmChange(p.getStock(), newStock, "stock")) p.setStock(newStock);
                     } catch (NumberFormatException e) {
-                        System.out.println("❌ Entrada invalida. Ingresa un numero.");
+                        System.out.println("❌ Entrada inválida. Ingresa un número.");
+                    }
+                    break;
+                case 3:
+                    if (p instanceof Drink drink) {
+                        System.out.println("🧪 Litros actuales: " + drink.getLiters() + "L");
+                        double newLiters = Utils.validatePositiveDouble("🧪 Ingrese los nuevos litros: ");
+                        if (Utils.confirmChange(drink.getLiters(), newLiters, "litros")) drink.setLiters(newLiters);
+                    } else if (p instanceof Food food) {
+                        System.out.println("⚖️ Peso actual: " + food.getWeightGrams() + "g");
+                        int newWeight = Utils.validatePositiveInt("⚖️ Ingrese el nuevo peso en gramos: ");
+                        if (Utils.confirmChange(food.getWeightGrams(), newWeight, "peso")) food.setWeightGrams(newWeight);
+                    }
+                    break;
+
+                case 4:
+                    if (p instanceof Drink drink) {
+                        System.out.println("🧴 Tipo de envase actual: " + drink.getContainerType());
+                        String newContainerType = Utils.validatePositiveString("🧴 Ingrese el nuevo tipo de envase: ");
+                        if (Utils.confirmChange(drink.getContainerType(), newContainerType, "tipo de envase")) drink.setContainerType(newContainerType);
+                    } else if (p instanceof Food food) {
+                        System.out.println("🔥 Calorías actuales: " + food.getCalories());
+                        int newCalories = Utils.validatePositiveInt("🔥 Ingrese las nuevas calorías: ");
+                        if (Utils.confirmChange(food.getCalories(), newCalories, "calorías")) food.setCalories(newCalories);
                     }
                     break;
                 }
@@ -190,7 +170,7 @@ public class ProductService {
             ) == 0;
         }
 
-        return p.showProduct();
+        return p.toString();
     }
 
     public String deleteProduct() {
@@ -204,7 +184,7 @@ public class ProductService {
         );
 
         if (confirmDelete == 1) {
-            products.remove(p.getID());
+            products.remove(p);
             return "✅ El producto '" + p.getName() + "' fue eliminado exitosamente.";
         }
 

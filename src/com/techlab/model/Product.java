@@ -2,7 +2,7 @@ package com.techlab.model;
 
 
 public class Product {
-    static int id_increment = 0;
+    private static int id_increment = 0;
 
 
     private int ID;
@@ -13,23 +13,18 @@ public class Product {
     public Product(String name, double price, int stock) {
         this.ID = id_increment++;
 
-        this.name = name;
-        this.price = price;
-        this.stock = stock;
+        this.setName(name);
+        this.setPrice(price);
+        this.setStock(stock);
     }
 
-    //Functions
-    public String showProduct() {
+    @Override
+    public String toString() {
         return "🆔 ID: " + this.getID() + " | 🏷️ Nombre: " + this.getName() + " | 💲 Precio: $" + this.getPrice() + " | 📦 Stock: " + this.getStock();
     }
 
-    //Setters and Getters
     public int getID() {
         return ID;
-    }
-
-    public void setID(int ID) {
-        this.ID = ID;
     }
 
     public String getName() {
@@ -45,6 +40,8 @@ public class Product {
     }
 
     public void setPrice(double price) {
+        if(price < 0) throw new IllegalArgumentException("❌ Error. El precio no puede ser negativo.");
+
         this.price = price;
     }
 
@@ -53,6 +50,7 @@ public class Product {
     }
 
     public void setStock(int stock) {
+        if(stock < 0) throw new IllegalArgumentException("❌ Error. El stock no puede ser negativo.");
         this.stock = stock;
     }
 }

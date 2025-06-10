@@ -20,10 +20,10 @@ public class OrderService {
 
     public String createOrder() {
         productService.showProducts();
-        boolean isValid = false;
+        boolean continueAdding = false;
         Order order = new Order();
 
-        while (!isValid) {
+        while (!continueAdding) {
             Product p = productService.searchProductById();
             if (p == null) return "";
 
@@ -53,14 +53,13 @@ public class OrderService {
 
             if (confirmOrder == 1) {
                 order.addItem(p, quantity);
-                p.setStock(p.getStock() - quantity);
                 System.out.println("✅ Producto agregado al pedido!");
             } else {
                 System.out.println("❌ Producto no agregado.");
             }
 
-            isValid = Utils.askForValidOption(
-                    "¿Desea seguir agregando productos al pedido?\n1 - Si ➕\n0 - No 🛑",
+            continueAdding = Utils.askForValidOption(
+                    "Desea seguir agregando productos al pedido?\n1 - Si ➕\n0 - No 🛑",
                     Set.of(0, 1)
             ) == 0;
         }
@@ -70,11 +69,9 @@ public class OrderService {
     }
 
 
-    public String showOrders() {
+    public void showOrders() {
         for (Order o : this.orders) {
             System.out.println(o.showLineItem());
         }
-
-        return "";
     }
 }

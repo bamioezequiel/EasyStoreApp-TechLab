@@ -28,8 +28,23 @@ public class Main {
 
                 switch (option) {
                     case 1:
-                        String message = productService.createProduct();
-                        System.out.println("🆕 " + message);
+                        int optionType = Utils.askForValidOption(
+                                "\n🍽️ ¿Desea crear un producto de tipo Comida o Bebida?\n" +
+                                        "1 - Comida 🍔\n" +
+                                        "02" +
+                                        " - Bebida 🥤",
+                                Set.of(0, 1)
+                        );
+
+                        String message;
+                        if (optionType == 1) {
+                            message = productService.createProduct("food");
+                            System.out.println("🆕 Producto de comida creado: " + message);
+                        } else {
+                            message = productService.createProduct("drink");
+                            System.out.println("🆕 Producto de bebida creado: " + message);
+                        }
+
                         break;
                     case 2:
                         try {
@@ -42,19 +57,20 @@ public class Main {
                         break;
                     case 3:
                         Product p = productService.searchProductById();
-                        if(p == null) continue;
-                        System.out.println("\n🔍 Detalles del producto:");
-                        System.out.println(p.showProduct());
+                        if(p != null) {
+                            System.out.println("\n🔍 Detalles del producto:");
+                            System.out.println(p.toString());
 
-                        int optionUpdate = Utils.askForValidOption(
-                                "Desea modificar el producto?\n1 - Sí ✅\n0 - No ❌",
-                                Set.of(0, 1)
-                        );
+                            int optionUpdate = Utils.askForValidOption(
+                                    "Desea modificar el producto?\n1 - Sí ✅\n0 - No ❌",
+                                    Set.of(0, 1)
+                            );
 
-                        if(optionUpdate == 1) {
-                            System.out.println(productService.updateProduct(p));
-                            System.out.println("\nPresiona Enter para continuar...");
-                            sc.nextLine();
+                            if(optionUpdate == 1) {
+                                System.out.println(productService.updateProduct(p));
+                                System.out.println("\nPresiona Enter para continuar...");
+                                sc.nextLine();
+                            }
                         }
                         break;
                     case 4:
@@ -63,7 +79,6 @@ public class Main {
                     case 5:
                         System.out.println("🛒 Creando nuevo pedido...");
                         System.out.println(orderService.createOrder());
-
                         break;
                     case 6:
                         System.out.println("📋 Listado de pedidos:");
@@ -82,6 +97,8 @@ public class Main {
                 System.out.println("⚠️ Error inesperado: " + e.getMessage());
             }
         } while(option != 7);
+
+    sc.close();
 }
 
     static void showMenu() {

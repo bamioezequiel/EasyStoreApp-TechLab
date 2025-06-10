@@ -22,18 +22,17 @@ public class LineItem {
     }
 
     public int getQuantity() {
+
         return quantity;
     }
 
     public void setQuantity(int quantity) {
+        if(quantity <= 0) throw new IllegalArgumentException("❌ La cantidad debe ser mayor a 0.");
+
         this.quantity = quantity;
     }
 
     public int getID() {
         return ID;
-    }
-
-    public void setID(int ID) {
-        this.ID = ID;
     }
 }
