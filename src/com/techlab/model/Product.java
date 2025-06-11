@@ -1,6 +1,5 @@
 package com.techlab.model;
 
-
 public class Product {
     private static int id_increment = 0;
 

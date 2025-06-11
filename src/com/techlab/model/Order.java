@@ -9,7 +9,7 @@ public class Order {
 
     private int ID;
     private List<LineItem> items;
-    private double costTotal = 0;
+    private double costTotal;
 
     public Order() {
         this.ID = id_increment++;
@@ -63,6 +63,10 @@ public class Order {
 
     public void setCostTotal(double costTotal) {
         this.costTotal = costTotal;
+    }
+
+    public List<LineItem> getItems() {
+        return this.items;
     }
 
     public int getID() {

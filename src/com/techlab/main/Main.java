@@ -29,10 +29,9 @@ public class Main {
                 switch (option) {
                     case 1:
                         int optionType = Utils.askForValidOption(
-                                "\n🍽️ ¿Desea crear un producto de tipo Comida o Bebida?\n" +
+                                "\n🍽️ Desea crear un producto de tipo Comida o Bebida?\n" +
                                         "1 - Comida 🍔\n" +
-                                        "02" +
-                                        " - Bebida 🥤",
+                                        "0 - Bebida 🥤",
                                 Set.of(0, 1)
                         );
 

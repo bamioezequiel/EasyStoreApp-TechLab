@@ -20,15 +20,16 @@ public class OrderService {
 
     public String createOrder() {
         productService.showProducts();
-        boolean continueAdding = false;
+        boolean continueAdding = true;
         Order order = new Order();
 
-        while (!continueAdding) {
+        while (continueAdding) {
             Product p = productService.searchProductById();
             if (p == null) return "";
 
             int quantity = 0;
             boolean validQuantity = false;
+            boolean outOfStock = false;
 
             while (!validQuantity) {
                 System.out.print("🛒 Cuantos productos desea agregar al pedido? ");
@@ -38,6 +39,10 @@ public class OrderService {
                         System.out.println("⚠️ La cantidad debe ser mayor a 0.");
                     } else if (quantity > p.getStock()) {
                         System.out.println("❌ No hay stock suficiente. Stock disponible: " + p.getStock());
+                        if(p.getStock() == 0) {
+                            outOfStock = true;
+                            break;
+                        }
                     } else {
                         validQuantity = true;
                     }
@@ -46,24 +51,28 @@ public class OrderService {
                 }
             }
 
-            int confirmOrder = Utils.askForValidOption(
-                    "🧾 Seguro que desea agregar este producto al pedido?\n1 - Confirmar ✅\n0 - Cancelar ❌",
-                    Set.of(0, 1)
-            );
+            if (!outOfStock) {
+                int confirmOrder = Utils.askForValidOption(
+                        "🧾 Seguro que desea agregar este producto al pedido?\n1 - Confirmar ✅\n0 - Cancelar ❌",
+                        Set.of(0, 1)
+                );
 
-            if (confirmOrder == 1) {
-                order.addItem(p, quantity);
-                System.out.println("✅ Producto agregado al pedido!");
-            } else {
-                System.out.println("❌ Producto no agregado.");
+                if (confirmOrder == 1) {
+                    order.addItem(p, quantity);
+                    System.out.println("✅ Producto agregado al pedido!");
+                } else {
+                    System.out.println("❌ Producto no agregado.");
+                }
             }
 
             continueAdding = Utils.askForValidOption(
                     "Desea seguir agregando productos al pedido?\n1 - Si ➕\n0 - No 🛑",
                     Set.of(0, 1)
-            ) == 0;
+            ) == 1;
         }
-
+        if (order.getItems().isEmpty()) {
+            return "❌ Error. Se cancelo el pedido por no ingresar productos\n";
+        }
         orders.add(order);
         return "🎉 Pedido confirmado!\n" + order.showLineItem();
     }
