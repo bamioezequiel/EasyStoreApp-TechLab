@@ -1,0 +1,12 @@
+# Java
+api/target/
+api/*.iml
+api/.idea/
+
+# Node
+client/node_modules/
+client/.env
+
+# Sistema
+.DS_Store
+.env

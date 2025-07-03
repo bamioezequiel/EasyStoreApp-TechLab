@@ -1,0 +1,40 @@
+.about {
+  margin-top: 2rem;
+  padding: 1rem;
+  background-color: #f3f7ff;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.author {
+  color: #2E83F2;
+  font-weight: 600;
+}
+
+.about p {
+  margin: 0.5rem 0;
+  font-size: 0.95rem;
+  color: #444;
+}
+
+.socialLinks {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.socialLinks a {
+  color: #2E83F2;
+  text-decoration: none;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.socialLinks a:hover {
+  text-decoration: underline;
+}

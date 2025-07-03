@@ -1,0 +1,35 @@
+/* App.module.css */
+
+body {
+  font-family: "Roboto", sans-serif;
+  margin-right: 0;
+}
+
+.mainContent {
+  transition: margin-right 0.3s ease;
+  text-align: center;
+  padding: 5px;
+}
+
+@media (max-width: 768px) {
+  .mainContent {
+    margin-right: 0;
+  }
+}
+
+/* Colores y estilos generales para links y botones */
+
+/* Botón agregado al carrito */
+
+.btnAdded {
+  background-color: #28a745;
+  color: white;
+}
+
+/* Ajustes para botón de descripción */
+
+.btnLink {
+  padding-left: 0;
+  font-size: 14px;
+  color: #007bff;
+}

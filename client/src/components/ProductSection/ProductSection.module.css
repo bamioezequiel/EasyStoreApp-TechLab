@@ -1,0 +1,27 @@
+.productSection {
+  padding: 2rem 1rem;
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+  max-width: 1140px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(46, 131, 242, 0.08);
+}
+
+.title {
+  text-align: center;
+  font-size: 2rem;
+  color: #2E83F2;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.productosContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  padding: 0 1rem;
+}
