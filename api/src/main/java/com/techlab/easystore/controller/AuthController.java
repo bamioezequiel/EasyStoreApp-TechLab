@@ -53,7 +53,7 @@ public class AuthController {
             User user = userDetails.getUser();
 
             // Generar token con el username
-            String token = jwtUtil.generateToken(user.getUsername());
+            String token = jwtUtil.generateToken(user.getUsername(), user.getRole().getName());
 
             // Devolver respuesta con info útil
             AuthResponse response = new AuthResponse(

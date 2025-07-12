@@ -31,12 +31,13 @@ public class JwtUtil {
         key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String generateToken(String username) {
+    public String generateToken(String username, String role) {
         return Jwts.builder()
                 .setSubject(username)
-                .setIssuedAt(new Date())  // fecha de emisión
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))  // vencimiento
-                .signWith(key, SignatureAlgorithm.HS256)  // usa el key y algoritmo
+                .claim("role", role)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
