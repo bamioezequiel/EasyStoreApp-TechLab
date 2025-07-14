@@ -46,134 +46,93 @@ public class DataInitializer implements CommandLineRunner {
 
         roleRepository.saveAll(Arrays.asList(adminRole, userRole));
 
-        Category cars = new Category();
-        cars.setName("Coches");
+        Category technology = new Category();
+        technology.setName("Tecnología");
 
-        categoryRepository.saveAll(Arrays.asList(cars));
+        categoryRepository.saveAll(Arrays.asList(technology));
 
-        Product sparkPlugsNGK = new Product();
-        sparkPlugsNGK.setName("Juego de 4 bujías NGK BKR5ES-11");
-        sparkPlugsNGK.setDescription("Bujías estándar NGK para motores nafteros de 4 cilindros.");
-        sparkPlugsNGK.setImageUrl("https://m.media-amazon.com/images/I/71YbR3H5fML._AC_SL1500_.jpg");
-        sparkPlugsNGK.setPrice(7500.00);
-        sparkPlugsNGK.setStock(60);
-        sparkPlugsNGK.setCategory(cars);
+        Product ssdSamsung = new Product();
+        ssdSamsung.setName("SSD Samsung 970 EVO Plus 1TB");
+        ssdSamsung.setDescription("Unidad SSD NVMe de alta velocidad para computadoras.");
+        ssdSamsung.setImageUrl("https://m.media-amazon.com/images/I/71OYNmVRFhL._AC_UY327_FMwebp_QL65_.jpg");
+        ssdSamsung.setPrice(35000.00);
+        ssdSamsung.setStock(25);
+        ssdSamsung.setCategory(technology);
 
-        Product sparkPlugsNGKIridium = new Product();
-        sparkPlugsNGKIridium.setName("NGK Laser Iridium ILKAR7B11");
-        sparkPlugsNGKIridium.setDescription("Alta performance, punta de iridio de 0.6 mm.");
-        sparkPlugsNGKIridium.setImageUrl("https://m.media-amazon.com/images/I/61O7zi4zEOL._AC_SL1000_.jpg");
-        sparkPlugsNGKIridium.setPrice(12000.00);
-        sparkPlugsNGKIridium.setStock(40);
-        sparkPlugsNGKIridium.setCategory(cars);
+        Product laptopDell = new Product();
+        laptopDell.setName(getName());
+        laptopDell.setDescription("Laptop ultradelgada con procesador Intel i7 de 11va generación.");
+        laptopDell.setImageUrl("https://m.media-amazon.com/images/I/71qhlMAlQNL._AC_UY327_FMwebp_QL65_.jpg");
+        laptopDell.setPrice(150000.00);
+        laptopDell.setStock(15);
+        laptopDell.setCategory(technology);
 
-        Product sparkPlugsNGKVPower = new Product();
-        sparkPlugsNGKVPower.setName("NGK V‑Power Race Plug");
-        sparkPlugsNGKVPower.setDescription("Kit de 4 bujías racing no-resistor para Miata.");
-        sparkPlugsNGKVPower.setImageUrl("https://fab9tuning.com/cdn/shop/products/NGK-V-Power-race-plug_1024x1024.jpg");
-        sparkPlugsNGKVPower.setPrice(13000.00);
-        sparkPlugsNGKVPower.setStock(30);
-        sparkPlugsNGKVPower.setCategory(cars);
+        Product monitorSamsung = new Product();
+        monitorSamsung.setName("Monitor Samsung Curvo 27\"");
+        monitorSamsung.setDescription("Monitor curvo con resolución QHD para gaming y diseño.");
+        monitorSamsung.setImageUrl("https://m.media-amazon.com/images/I/619WSKm18ZL._AC_UY327_FMwebp_QL65_.jpg");
+        monitorSamsung.setPrice(45000.00);
+        monitorSamsung.setStock(20);
+        monitorSamsung.setCategory(technology);
 
-        Product sparkPlugsNGKS58 = new Product();
-        sparkPlugsNGKS58.setName("NGK 96206 Laser Iridium S58/B58");
-        sparkPlugsNGKS58.setDescription("Para BMW S58 y B58, centrado fino de iridio.");
-        sparkPlugsNGKS58.setImageUrl("https://burgertuning.com/cdn/shop/products/sparkplug-s58-item.png");
-        sparkPlugsNGKS58.setPrice(18000.00);
-        sparkPlugsNGKS58.setStock(25);
-        sparkPlugsNGKS58.setCategory(cars);
+        Product mouseLogitech = new Product();
+        mouseLogitech.setName("Mouse Logitech MX Master 3");
+        mouseLogitech.setDescription("Mouse inalámbrico avanzado para productividad.");
+        mouseLogitech.setImageUrl("https://logitechar.vtexassets.com/arquivos/ids/157412-1200-1200?v=637248874952300000&width=1200&height=1200&aspect=true");
+        mouseLogitech.setPrice(12000.00);
+        mouseLogitech.setStock(50);
+        mouseLogitech.setCategory(technology);
 
-        Product oilFilterBosch = new Product();
-        oilFilterBosch.setName("Filtro de aceite Bosch 3323");
-        oilFilterBosch.setDescription("Filtro metálico para auto 1.4–2.0 L.");
-        oilFilterBosch.setImageUrl("https://content2.autoanything.com/content/productimages/750/OF3323_Bosch_Oil_Filter_750.jpg");
-        oilFilterBosch.setPrice(3500.00);
-        oilFilterBosch.setStock(45);
-        oilFilterBosch.setCategory(cars);
+        Product tecladoRazer = new Product();
+        tecladoRazer.setName("Teclado mecánico Razer BlackWidow");
+        tecladoRazer.setDescription("Teclado gaming RGB con switches mecánicos.");
+        tecladoRazer.setImageUrl("https://m.media-amazon.com/images/I/815XJdl7fXL._AC_SL1500_.jpg");
+        tecladoRazer.setPrice(18000.00);
+        tecladoRazer.setStock(30);
+        tecladoRazer.setCategory(technology);
 
-        Product airFilterMann = new Product();
-        airFilterMann.setName("Filtro de aire Mann C 30110");
-        airFilterMann.setDescription("Optimiza flujo de aire y eficiencia.");
-        airFilterMann.setImageUrl("https://assets.autoanything.com/content/productimages/750/AM30110_Mann-Air-Filter_750.jpg");
-        airFilterMann.setPrice(2800.00);
-        airFilterMann.setStock(70);
-        airFilterMann.setCategory(cars);
+        Product auricularesSony = new Product();
+        auricularesSony.setName("Auriculares Sony WH-1000XM4");
+        auricularesSony.setDescription("Auriculares inalámbricos con cancelación de ruido.");
+        auricularesSony.setImageUrl("https://m.media-amazon.com/images/I/61oqO1AMbdL._AC_SL1500_.jpg");
+        auricularesSony.setPrice(35000.00);
+        auricularesSony.setStock(40);
+        auricularesSony.setCategory(technology);
 
-        Product carBatteryMoura = new Product();
-        carBatteryMoura.setName("Batería Moura 12 V 60 Ah");
-        carBatteryMoura.setDescription("Batería húmeda para autos compactos.");
-        carBatteryMoura.setImageUrl("https://www.moura.com/wp-content/uploads/2020/10/Moura-Power-C60-60Ah.jpg");
-        carBatteryMoura.setPrice(48000.00);
-        carBatteryMoura.setStock(20);
-        carBatteryMoura.setCategory(cars);
+        Product gpuNvidia = new Product();
+        gpuNvidia.setName("Tarjeta gráfica NVIDIA RTX 3080");
+        gpuNvidia.setDescription("GPU de alto rendimiento para gaming y creación.");
+        gpuNvidia.setImageUrl("https://m.media-amazon.com/images/I/813Lh2QIZNL._AC_UY327_FMwebp_QL65_.jpg");
+        gpuNvidia.setPrice(250000.00);
+        gpuNvidia.setStock(10);
+        gpuNvidia.setCategory(technology);
 
-        Product brakePadsFerodo = new Product();
-        brakePadsFerodo.setName("Pastillas de freno delanteras Ferodo");
-        brakePadsFerodo.setDescription("Silenciosas, alto coeficiente de fricción.");
-        brakePadsFerodo.setImageUrl("https://partmart.com/getimage.aspx?imgID=134123");
-        brakePadsFerodo.setPrice(8200.00);
-        brakePadsFerodo.setStock(35);
-        brakePadsFerodo.setCategory(cars);
+        Product fuenteCorsair = new Product();
+        fuenteCorsair.setName("Fuente Corsair RM750x 750W");
+        fuenteCorsair.setDescription("Fuente de poder modular, eficiente y silenciosa.");
+        fuenteCorsair.setImageUrl("https://m.media-amazon.com/images/I/61tOgJ849GL._AC_UY327_FMwebp_QL65_.jpg");
+        fuenteCorsair.setPrice(20000.00);
+        fuenteCorsair.setStock(22);
+        fuenteCorsair.setCategory(technology);
 
-        Product motorOilMobil = new Product();
-        motorOilMobil.setName("Aceite sintético Mobil 1 5W‑30 4 L");
-        motorOilMobil.setDescription("Alta protección para motores modernos.");
-        motorOilMobil.setImageUrl("https://m.media-amazon.com/images/I/71I2Yub8nEL._AC_SL1500_.jpg");
-        motorOilMobil.setPrice(10500.00);
-        motorOilMobil.setStock(50);
-        motorOilMobil.setCategory(cars);
-
-        Product wiperBladesBosch = new Product();
-        wiperBladesBosch.setName("Limpia parabrisas Bosch Aerotwin 22\"");
-        wiperBladesBosch.setDescription("Diseño aerodinámico y reducción de ruido.");
-        wiperBladesBosch.setImageUrl("https://m.media-amazon.com/images/I/61usNbi+0sL._AC_SL1500_.jpg");
-        wiperBladesBosch.setPrice(2900.00);
-        wiperBladesBosch.setStock(80);
-        wiperBladesBosch.setCategory(cars);
-
-        Product timingBeltContinental = new Product();
-        timingBeltContinental.setName("Correa distribución Continental CT1020");
-        timingBeltContinental.setDescription("Alta durabilidad y resistencia térmica.");
-        timingBeltContinental.setImageUrl("https://shop.continental-aftermarket.com/media/catalog/product/c/t/ct1020_c2.jpg");
-        timingBeltContinental.setPrice(13400.00);
-        timingBeltContinental.setStock(25);
-        timingBeltContinental.setCategory(cars);
-
-        Product coolantTotal = new Product();
-        coolantTotal.setName("Refrigerante Total Glacelf 5 L");
-        coolantTotal.setDescription("Protección avanzada contra el sobrecalentamiento.");
-        coolantTotal.setImageUrl("https://www.totalenergies.com/sites/g/files/nytnzq116/files/styles/media_full/public/2022-07/GlacelfTM_G12%2B_Autonomic_Image_5L_0.png");
-        coolantTotal.setPrice(7200.00);
-        coolantTotal.setStock(40);
-        coolantTotal.setCategory(cars);
-
-        Product tireInflator = new Product();
-        tireInflator.setName("Inflador eléctrico 12 V para neumáticos");
-        tireInflator.setDescription("Portátil con apagado automático por presión.");
-        tireInflator.setImageUrl("https://m.media-amazon.com/images/I/71OOS9D6tXL._AC_SL1500_.jpg");
-        tireInflator.setPrice(9400.00);
-        tireInflator.setStock(28);
-        tireInflator.setCategory(cars);
-
-        Product ledHeadlights = new Product();
-        ledHeadlights.setName("Kit de luces LED H7 6500 K");
-        ledHeadlights.setDescription("Mejor visibilidad y bajo consumo.");
-        ledHeadlights.setImageUrl("https://m.media-amazon.com/images/I/61+piOiUOhL._AC_SL1000_.jpg");
-        ledHeadlights.setPrice(11200.00);
-        ledHeadlights.setStock(37);
-        ledHeadlights.setCategory(cars);
+        Product placaMadreAsus = new Product();
+        placaMadreAsus.setName("Placa Madre ASUS ROG Strix B550-F");
+        placaMadreAsus.setDescription("Motherboard para procesadores AMD Ryzen con Wi-Fi.");
+        placaMadreAsus.setImageUrl("https://m.media-amazon.com/images/I/81S9D7bqEzL._AC_UY327_FMwebp_QL65_.jpg");
+        placaMadreAsus.setPrice(45000.00);
+        placaMadreAsus.setStock(18);
+        placaMadreAsus.setCategory(technology);
 
         productRepository.saveAll(Arrays.asList(
-                oilFilterBosch,
-                airFilterMann,
-                carBatteryMoura,
-                brakePadsFerodo,
-                timingBeltContinental,
-                coolantTotal,
-                tireInflator,
-                ledHeadlights,
-                sparkPlugsNGKIridium,
-                sparkPlugsNGKVPower
+                ssdSamsung,
+                laptopDell,
+                monitorSamsung,
+                mouseLogitech,
+                tecladoRazer,
+                auricularesSony,
+                gpuNvidia,
+                fuenteCorsair,
+                placaMadreAsus
         ));
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
@@ -184,5 +143,9 @@ public class DataInitializer implements CommandLineRunner {
         admin.setRole(adminRole);
 
         userRepository.save(admin);
+    }
+
+    private static String getName() {
+        return "Laptop Dell XPS 13";
     }
 }
