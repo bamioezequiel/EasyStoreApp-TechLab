@@ -41,21 +41,17 @@ public class SecurityConfig {
                 .cors(cors -> {}) // Habilita CORS
                 .authorizeHttpRequests(auth -> auth
 
-                        // 📌 RUTAS PÚBLICAS
+                        // RUTAS PÚBLICAS
                         .requestMatchers("/api/auth/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/role/**").permitAll()
+                        .requestMatchers("/api/orders/**").permitAll()
 
-                        // 📌 RUTAS PROTEGIDAS POR ROL (ejemplo para futuro)
-                        //.requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        //.requestMatchers("/api/user/**").hasRole("USER")
-
-                        // 📌 RUTAS QUE REQUIEREN LOGIN
+                        // RUTAS QUE REQUIEREN LOGIN
                         .requestMatchers("/api/products/**").authenticated()
                         .requestMatchers("/api/categories/**").authenticated()
                         .requestMatchers("/api/role/**").authenticated()
-                        .requestMatchers("/api/orders/**").authenticated()
                         .requestMatchers("/api/auth/me").authenticated()
 
                         // 📌 CUALQUIER OTRA
