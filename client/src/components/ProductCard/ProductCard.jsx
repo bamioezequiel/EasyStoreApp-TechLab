@@ -2,67 +2,79 @@ import { useState } from 'react';
 import styles from './ProductCard.module.css';
 import { useCart } from '../../context/CartContext';
 
-export default function ProductCard({ producto }) {
-  const [agregado, setAgregado] = useState(false);
-  const [verDescripcion, setVerDescripcion] = useState(false);
+const DEFAULT_IMAGE = 'https://placehold.co/300x200?text=Sin+Imagen';
+
+export default function ProductCard({ product }) {
+  const [added, setAdded] = useState(false);
+  const [showDescription, setShowDescription] = useState(false);
   const { addToCart } = useCart();
 
-  const handleAgregar = () => {
+  if (!product) return null;
+
+  const handleAdd = () => {
     addToCart({
-      id: producto.id,
-      image: producto.image || producto.thumbnail,
-      title: producto.title,
-      price: producto.price,
+      id: product.id,
+      image: product.imageUrl || DEFAULT_IMAGE,
+      title: product.name,
+      price: product.price,
     });
 
-    setAgregado(true);
-    setTimeout(() => setAgregado(false), 1000);
+    setAdded(true);
+    setTimeout(() => setAdded(false), 1000);
+  };
+
+  const handleImageError = (event) => {
+    event.target.src = DEFAULT_IMAGE;
   };
 
   return (
     <>
       <div className={styles.card}>
         <img
-          src={producto.image || producto.thumbnail}
-          alt={producto.title}
+          src={product.imageUrl || DEFAULT_IMAGE}
+          alt={product.name}
           className={styles.cardImg}
+          onError={handleImageError}
         />
         <div>
-          <h5 className={styles.cardTitle}>{producto.title}</h5>
+          <h5 className={styles.cardTitle}>{product.name}</h5>
           <p className={styles.shortDescription}>
-            {producto.description.split(' ').slice(0, 5).join(' ')}...
+            {product.description.split(' ').slice(0, 5).join(' ')}...
           </p>
           <button
             className={styles.btnLink}
-            onClick={() => setVerDescripcion(true)}
+            onClick={() => setShowDescription(true)}
           >
             Ver descripción
           </button>
-          <p className={styles.price}>${producto.price}</p>
+          <p className={styles.price}>${product.price.toFixed(2)}</p>
           <button
             className={styles.btnPrimary}
-            onClick={handleAgregar}
-            disabled={agregado}
+            onClick={handleAdd}
+            disabled={added}
           >
-            {agregado ? 'Agregado' : 'Agregar al carrito'}
+            {added ? 'Agregado' : 'Agregar al carrito'}
           </button>
         </div>
       </div>
 
-      {verDescripcion && (
-        <div className={styles.modalOverlay} onClick={() => setVerDescripcion(false)}>
+      {showDescription && (
+        <div className={styles.modalOverlay} onClick={() => setShowDescription(false)}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-            <h3 className={styles.modalTitle}>{producto.title}</h3>
+            <h3 className={styles.modalTitle}>{product.name}</h3>
             <img
-              src={producto.image || producto.thumbnail}
-              alt={producto.title}
+              src={product.imageUrl || DEFAULT_IMAGE}
+              alt={product.name}
               className={styles.modalImg}
+              onError={handleImageError}
             />
-            <p>{producto.description}</p>
-            <p className={styles.modalPrice}><strong>Precio:</strong> ${producto.price}</p>
+            <p>{product.description}</p>
+            <p className={styles.modalPrice}>
+              <strong>Precio:</strong> ${product.price.toFixed(2)}
+            </p>
             <button
               className={styles.btnClose}
-              onClick={() => setVerDescripcion(false)}
+              onClick={() => setShowDescription(false)}
             >
               Cerrar
             </button>

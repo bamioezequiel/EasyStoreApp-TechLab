@@ -1,19 +1,26 @@
+// src/components/Dashboard/Dashboard.jsx
 import { useState } from 'react';
-import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { logout } from '../../redux/feature/auth/authSlice';
+
 import styles from './Dashboard.module.css';
 import { FaLinkedin, FaGlobe } from 'react-icons/fa';
+
+import ProductTable from '../ProductTable/ProductTable';
+import UserTable from '../UserTable/UserTable'; // nuevo
 
 export default function Dashboard() {
   const [activeSection, setActiveSection] = useState('inicio');
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const { logout } = useAuth();
+
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleLogout = () => {
     setIsLoggingOut(true);
     setTimeout(() => {
-      logout();
+      dispatch(logout());
       navigate('/login');
     }, 800);
   };
@@ -29,22 +36,33 @@ export default function Dashboard() {
         </div>
       )}
 
-
       <div className={styles.dashboardContainer}>
         <aside className={styles.sidebar}>
           <h2 className={styles.logo}>MiApp</h2>
 
           <ul className={styles.menu}>
-            <li className={`${styles.menuItem} ${activeSection === 'inicio' ? styles.active : ''}`} onClick={() => setActiveSection('inicio')}>
+            <li
+              className={`${styles.menuItem} ${activeSection === 'inicio' ? styles.active : ''}`}
+              onClick={() => setActiveSection('inicio')}
+            >
               Inicio
             </li>
-            <li className={`${styles.menuItem} ${activeSection === 'productos' ? styles.active : ''}`} onClick={() => setActiveSection('productos')}>
+            <li
+              className={`${styles.menuItem} ${activeSection === 'productos' ? styles.active : ''}`}
+              onClick={() => setActiveSection('productos')}
+            >
               Productos
             </li>
-            <li className={`${styles.menuItem} ${activeSection === 'usuarios' ? styles.active : ''}`} onClick={() => setActiveSection('usuarios')}>
+            <li
+              className={`${styles.menuItem} ${activeSection === 'usuarios' ? styles.active : ''}`}
+              onClick={() => setActiveSection('usuarios')}
+            >
               Usuarios
             </li>
-            <li className={`${styles.menuItem} ${activeSection === 'reportes' ? styles.active : ''}`} onClick={() => setActiveSection('reportes')}>
+            <li
+              className={`${styles.menuItem} ${activeSection === 'reportes' ? styles.active : ''}`}
+              onClick={() => setActiveSection('reportes')}
+            >
               Reportes
             </li>
             <li className={styles.menuItem} onClick={handleLogout} style={{ cursor: 'pointer' }}>
@@ -72,8 +90,8 @@ export default function Dashboard() {
               <p>Aquí puedes gestionar productos, usuarios, y más.</p>
             </>
           )}
-          {activeSection === 'productos' && <p>Gestión de productos - aquí iría tu tabla o formulario.</p>}
-          {activeSection === 'usuarios' && <p>Gestión de usuarios - listado, roles, permisos, etc.</p>}
+          {activeSection === 'productos' && <ProductTable />}
+          {activeSection === 'usuarios' && <UserTable />} {/* nuevo */}
           {activeSection === 'reportes' && <p>Reportes y estadísticas.</p>}
         </main>
       </div>

@@ -1,5 +1,5 @@
 import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
-import { useAuth } from './context/AuthContext';
+import { useSelector } from 'react-redux';
 
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
@@ -11,21 +11,17 @@ import Login from './components/Login/Login';
 import Dashboard from './components/Dashboard/Dashboard';
 
 import './App.module.css';
-import { useState } from 'react';
 
 export default function App() {
-  const { isAuthenticated, login } = useAuth();
+  const { isAuthenticated } = useSelector((state) => state.auth);
   const location = useLocation();
 
   const hideHeaderFooter = location.pathname === '/dashboard';
 
-  const handleLogin = (credentials) => {
-    return login(credentials);
-  };
-
   return (
     <>
       {!hideHeaderFooter && <Header />}
+
       <Routes>
         <Route
           path="/"
@@ -39,23 +35,30 @@ export default function App() {
         />
 
         <Route path="/carrito" element={<CartSection />} />
-       <Route
-        path="/login"
-        element={
-          isAuthenticated ? (
-            <Navigate to="/dashboard" replace />
-          ) : (
-            <Login onLogin={handleLogin} />
-          )
-        }
-      />
+
+        <Route
+          path="/login"
+          element={
+            isAuthenticated ? (
+              <Navigate to="/dashboard" replace />
+            ) : (
+              <Login />
+            )
+          }
+        />
+
         <Route
           path="/dashboard"
           element={
-            isAuthenticated ? <Dashboard /> : <Navigate to="/login" replace />
+            isAuthenticated ? (
+              <Dashboard />
+            ) : (
+              <Navigate to="/login" replace />
+            )
           }
         />
       </Routes>
+
       {!hideHeaderFooter && <Footer />}
     </>
   );

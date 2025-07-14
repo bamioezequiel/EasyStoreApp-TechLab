@@ -1,16 +1,19 @@
 import { Link, useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { logout } from '../../redux/feature/auth/authSlice';
 import img from './../../img/icon-logo.png';
 import style from './Header.module.css';
 import { useCart } from '../../context/CartContext';
-import { useAuth } from '../../context/AuthContext';
 
 export default function Header() {
   const { itemCount } = useCart();
-  const { isAuthenticated, logout } = useAuth();
+
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { isAuthenticated } = useSelector((state) => state.auth);
 
   const handleLogout = () => {
-    logout();
+    dispatch(logout());
     navigate('/login');
   };
 
@@ -35,7 +38,12 @@ export default function Header() {
             <>
               <li className={style.itemMenu}>
                 <Link to="/dashboard">Dashboard</Link>
-              </li>             
+              </li>
+              <li className={style.itemMenu}>
+                <button onClick={handleLogout} className={style.logoutBtn}>
+                  Cerrar sesión
+                </button>
+              </li>
             </>
           ) : (
             <li className={style.itemMenu}>
