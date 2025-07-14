@@ -18,8 +18,9 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Asegura que el rol se devuelva con el prefijo ROLE_
-        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + user.getRole().getName()));
+        return Collections.singletonList(
+                new SimpleGrantedAuthority("ROLE_" + user.getRole().getName().toUpperCase())
+        );
     }
 
     @Override
