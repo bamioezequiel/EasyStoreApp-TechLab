@@ -23,7 +23,7 @@ import org.springframework.web.filter.CorsFilter;
 import java.util.List;
 
 @Configuration
-@EnableMethodSecurity
+@EnableMethodSecurity // Habilita @PreAuthorize, @Secured, etc.
 public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
@@ -38,12 +38,22 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(csrf -> csrf.disable())
-                .cors(cors -> {})
+                .cors(cors -> {}) // Habilita CORS
                 .authorizeHttpRequests(auth -> auth
+
+                        // 📌 RUTAS PÚBLICAS
                         .requestMatchers("/api/auth/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
+
+                        // 📌 RUTAS PROTEGIDAS POR ROL (ejemplo para futuro)
+                        //.requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        //.requestMatchers("/api/user/**").hasRole("USER")
+
+                        // 📌 RUTAS QUE REQUIEREN LOGIN
                         .requestMatchers("/api/products/**").authenticated()
                         .requestMatchers("/api/auth/me").authenticated()
+
+                        // 📌 CUALQUIER OTRA
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

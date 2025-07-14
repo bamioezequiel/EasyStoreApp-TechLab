@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import * as productsAPI from './productsAPI';
 
+// fetchProducts no necesita token
 export const fetchProducts = createAsyncThunk('products/fetchAll', async (_, thunkAPI) => {
   try {
     return await productsAPI.fetchAllProducts();
@@ -11,15 +12,19 @@ export const fetchProducts = createAsyncThunk('products/fetchAll', async (_, thu
 
 export const addProduct = createAsyncThunk('products/add-product', async (product, thunkAPI) => {
   try {
-    return await productsAPI.createProduct(product);
+    const token = thunkAPI.getState().auth.user.token;
+    return await productsAPI.createProduct(product, token);
   } catch (error) {
     return thunkAPI.rejectWithValue(error.message);
   }
 });
 
-export const editProduct = createAsyncThunk('products/edit', async ({id, product}, thunkAPI) => {
+export const editProduct = createAsyncThunk('products/edit', async ({ id, product }, thunkAPI) => {
   try {
-    return await productsAPI.updateProduct(id, product);
+    const token = thunkAPI.getState().auth.user.token;
+    console.log(token)
+
+    return await productsAPI.updateProduct(id, product, token);
   } catch (error) {
     return thunkAPI.rejectWithValue(error.message);
   }
@@ -27,8 +32,9 @@ export const editProduct = createAsyncThunk('products/edit', async ({id, product
 
 export const removeProduct = createAsyncThunk('products/remove', async (id, thunkAPI) => {
   try {
-    await productsAPI.deleteProduct(id);
-    return id; // devolvemos el id para eliminar en estado local
+    const token = thunkAPI.getState().auth.user.token;
+    await productsAPI.deleteProduct(id, token);
+    return id;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.message);
   }
@@ -44,7 +50,6 @@ const productsSlice = createSlice({
   reducers: {},
   extraReducers(builder) {
     builder
-      // Fetch all
       .addCase(fetchProducts.pending, (state) => {
         state.status = 'loading';
         state.error = null;
@@ -57,8 +62,6 @@ const productsSlice = createSlice({
         state.status = 'failed';
         state.error = action.payload;
       })
-
-      // Add product
       .addCase(addProduct.pending, (state) => {
         state.status = 'loading';
         state.error = null;
@@ -71,8 +74,6 @@ const productsSlice = createSlice({
         state.status = 'failed';
         state.error = action.payload;
       })
-
-      // Edit product
       .addCase(editProduct.pending, (state) => {
         state.status = 'loading';
         state.error = null;
@@ -86,8 +87,6 @@ const productsSlice = createSlice({
         state.status = 'failed';
         state.error = action.payload;
       })
-
-      // Remove product
       .addCase(removeProduct.pending, (state) => {
         state.status = 'loading';
         state.error = null;

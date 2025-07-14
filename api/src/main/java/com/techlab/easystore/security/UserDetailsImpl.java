@@ -5,7 +5,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.List;
+import java.util.Collection;
+import java.util.Collections;
 
 public class UserDetailsImpl implements UserDetails {
 
@@ -16,8 +17,9 @@ public class UserDetailsImpl implements UserDetails {
     }
 
     @Override
-    public List<GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + this.user.getRole().getName()));
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        // Asegura que el rol se devuelva con el prefijo ROLE_
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + user.getRole().getName()));
     }
 
     @Override
@@ -27,18 +29,17 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getUsername();
+        return user.getUsername(); // O podés usar getEmail() si lo usás como identificador
     }
 
-    // Todos en true por simplicidad
+    // Habilitado, sin restricciones de cuenta
     @Override public boolean isAccountNonExpired() { return true; }
     @Override public boolean isAccountNonLocked() { return true; }
     @Override public boolean isCredentialsNonExpired() { return true; }
     @Override public boolean isEnabled() { return true; }
 
-    // Extra: acceder al User original si lo necesitás
+    // Acceso al objeto User original si hace falta
     public User getUser() {
         return user;
     }
-
 }
