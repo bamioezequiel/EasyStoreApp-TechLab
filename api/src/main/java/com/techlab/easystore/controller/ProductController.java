@@ -5,6 +5,7 @@ import com.techlab.easystore.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -28,26 +29,28 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public Product getProductById(@PathVariable Long id) {
-        return this.productService.findProductByID(id);
+        return productService.findProductByID(id);
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Product> createProduct(@Valid @RequestBody Product product) {
         Product savedProduct = this.productService.createProduct(product);
         return ResponseEntity.created(URI.create("/api/products/" + savedProduct.getId())).body(savedProduct);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Product> updateProduct(@PathVariable Long id, @Valid @RequestBody Product product) {
         Product updatedProduct = this.productService.updateProduct(product, id);
         return ResponseEntity.ok(updatedProduct);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Product> deleteProduct(@PathVariable Long id) {
         boolean deleted = productService.deleteProduct(id);
         if (deleted) return ResponseEntity.noContent().build();
-
         return ResponseEntity.notFound().build();
     }
 }
