@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchProducts, addProduct, editProduct, removeProduct } from '../../redux/feature/products/productsSlice';
+import { fetchCategories } from '../../redux/feature/category/categorySlice'; // importá el thunk de categorías
 import ProductForm from '../ProductForm/ProductForm';
 import styles from './ProductTable.module.css';
 import Swal from 'sweetalert2';
@@ -8,11 +9,13 @@ import Swal from 'sweetalert2';
 export default function ProductTable() {
   const dispatch = useDispatch();
   const { items: products, status, error } = useSelector(state => state.products);
+  const { items: categories } = useSelector(state => state.categories); // obtenemos categorías
   const [showForm, setShowForm] = useState(false);
   const [editProductData, setEditProductData] = useState(null);
 
   useEffect(() => {
     dispatch(fetchProducts());
+    dispatch(fetchCategories());  // cargamos categorías también
   }, [dispatch]);
 
   const openFormForAdd = () => {
@@ -80,13 +83,20 @@ export default function ProductTable() {
           initialData={editProductData || {}}
           onSuccess={handleFormSuccess}
           onCancel={closeForm}
+          categories={categories}  
         />
       )}
 
       <table className={styles.table}>
         <thead>
           <tr>
-            <th>ID</th><th>Nombre</th><th>Precio</th><th>Stock</th><th>Acciones</th>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Imagen</th> 
+            <th>Categoría</th> 
+            <th>Precio</th>
+            <th>Stock</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -94,6 +104,22 @@ export default function ProductTable() {
             <tr key={p.id}>
               <td>{p.id}</td>
               <td>{p.name}</td>
+
+              <td>
+                <img
+                  src={p.imageUrl || 'https://placehold.co/60x40?text=Sin+img'}
+                  alt={p.name}
+                  style={{ width: 60, height: 40, objectFit: 'cover', borderRadius: 4 }}
+                />
+              </td>
+              <td>
+                {/* Opción 1: Si product.category es objeto */}
+                {p.category?.name
+                  ? p.category.name
+                  // Opción 2: Si category es solo id (por ejemplo p.category === 1)
+                  : categories.find(cat => cat.id === p.category)?.name || 'Sin categoría'}
+              </td>
+
               <td>${p.price}</td>
               <td>{p.stock}</td>
               <td>

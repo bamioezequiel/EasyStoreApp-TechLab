@@ -1,12 +1,10 @@
-/* ProductForm.module.css */
-
 .form {
-  max-width: 480px;
+  max-width: 400px;
   margin: 1rem auto;
   padding: 1.5rem 2rem;
   background-color: #ffffff;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: #333;
 }
@@ -19,10 +17,7 @@
   color: #222;
 }
 
-.form input[type="text"],
-.form input[type="url"],
-.form input[type="number"],
-.form textarea {
+.form input {
   width: 100%;
   padding: 0.75rem 1rem;
   margin-bottom: 1rem;
@@ -31,20 +26,12 @@
   font-size: 1rem;
   transition: border-color 0.3s ease;
   font-family: inherit;
-  resize: vertical;
 }
 
-.form input[type="text"]:focus,
-.form input[type="url"]:focus,
-.form input[type="number"]:focus,
-.form textarea:focus {
+.form input:focus {
   border-color: #4caf50;
   outline: none;
   box-shadow: 0 0 5px rgba(76, 175, 80, 0.4);
-}
-
-.form textarea {
-  min-height: 80px;
 }
 
 .form button {
@@ -84,34 +71,17 @@
   background-color: #d32f2f;
 }
 
-.form .error {
-  margin-top: 1rem;
-  color: #f44336;
-  font-weight: 600;
-  text-align: center;
+.animateIn {
+  animation: fadeScaleIn 0.4s ease;
 }
 
-.form select {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  margin-bottom: 1rem;
-  border: 1.8px solid #ccc;
-  border-radius: 6px;
-  font-size: 1rem;
-  font-family: inherit;
-  transition: border-color 0.3s ease;
-  background-color: white;
-  cursor: pointer;
-  appearance: none; /* elimina el estilo nativo para poder personalizar */
-  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2210%22%20height%3D%227%22%20viewBox%3D%220%200%2010%207%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cpath%20d%3D%22M0%200l5%207%205-7H0z%22%20fill%3D%22%234caf50%22/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 1rem center;
-  background-size: 10px 7px;
+@keyframes fadeScaleIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
-
-.form select:focus {
-  border-color: #4caf50;
-  outline: none;
-  box-shadow: 0 0 5px rgba(76, 175, 80, 0.4);
-}
-

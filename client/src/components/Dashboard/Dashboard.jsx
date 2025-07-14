@@ -8,7 +8,8 @@ import styles from './Dashboard.module.css';
 import { FaLinkedin, FaGlobe } from 'react-icons/fa';
 
 import ProductTable from '../ProductTable/ProductTable';
-import UserTable from '../UserTable/UserTable'; // nuevo
+import CategoryTable from '../CategoryTable/CategoryTable';
+import OrderTable from '../OrderTable/OrderTable';
 
 export default function Dashboard() {
   const [activeSection, setActiveSection] = useState('inicio');
@@ -57,13 +58,13 @@ export default function Dashboard() {
               className={`${styles.menuItem} ${activeSection === 'usuarios' ? styles.active : ''}`}
               onClick={() => setActiveSection('usuarios')}
             >
-              Usuarios
+              Categorias
             </li>
             <li
               className={`${styles.menuItem} ${activeSection === 'reportes' ? styles.active : ''}`}
               onClick={() => setActiveSection('reportes')}
             >
-              Reportes
+              Pedidos
             </li>
             <li className={styles.menuItem} onClick={handleLogout} style={{ cursor: 'pointer' }}>
               Cerrar sesión
@@ -91,8 +92,8 @@ export default function Dashboard() {
             </>
           )}
           {activeSection === 'productos' && <ProductTable />}
-          {activeSection === 'usuarios' && <UserTable />} {/* nuevo */}
-          {activeSection === 'reportes' && <p>Reportes y estadísticas.</p>}
+          {activeSection === 'usuarios' && <CategoryTable />}
+          {activeSection === 'reportes' && <OrderTable />}
         </main>
       </div>
     </>

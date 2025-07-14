@@ -44,6 +44,8 @@ public class SecurityConfig {
                         // 📌 RUTAS PÚBLICAS
                         .requestMatchers("/api/auth/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/role/**").permitAll()
 
                         // 📌 RUTAS PROTEGIDAS POR ROL (ejemplo para futuro)
                         //.requestMatchers("/api/admin/**").hasRole("ADMIN")
@@ -51,6 +53,9 @@ public class SecurityConfig {
 
                         // 📌 RUTAS QUE REQUIEREN LOGIN
                         .requestMatchers("/api/products/**").authenticated()
+                        .requestMatchers("/api/categories/**").authenticated()
+                        .requestMatchers("/api/role/**").authenticated()
+                        .requestMatchers("/api/orders/**").authenticated()
                         .requestMatchers("/api/auth/me").authenticated()
 
                         // 📌 CUALQUIER OTRA
