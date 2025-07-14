@@ -1,5 +1,6 @@
 package com.techlab.easystore.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -15,7 +16,7 @@ public class Category {
     private Long id;
 
     @OneToMany(mappedBy = "category")
-    @JsonManagedReference
+    @JsonIgnoreProperties("category")
     private List<Product> listProduct;
 
     @NotBlank(message = "❌ El nombre de la Categoria no puede estar vacío.")

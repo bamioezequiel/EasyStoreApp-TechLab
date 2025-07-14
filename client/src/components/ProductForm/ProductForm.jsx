@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import styles from './ProductForm.module.css';
 
-export default function ProductForm({ onSuccess, initialData = {}, onCancel }) {
+export default function ProductForm({ onSuccess, initialData = {}, onCancel, categories = [] }) {
   const [name, setName] = useState(initialData.name || '');
   const [description, setDescription] = useState(initialData.description || '');
   const [imageUrl, setImageUrl] = useState(initialData.imageUrl || '');
   const [price, setPrice] = useState(initialData.price || '');
   const [stock, setStock] = useState(initialData.stock || '');
+  const [categoryId, setCategoryId] = useState(initialData.category?.id || '');
   const [loading, setLoading] = useState(false);
   const [animate, setAnimate] = useState(false);
 
@@ -24,6 +25,9 @@ export default function ProductForm({ onSuccess, initialData = {}, onCancel }) {
       imageUrl,
       price: Number(price),
       stock: Number(stock),
+      category: {
+        id: Number(categoryId),
+      },
     };
 
     try {
@@ -46,6 +50,13 @@ export default function ProductForm({ onSuccess, initialData = {}, onCancel }) {
       <input type="number" placeholder="Precio" value={price} onChange={e => setPrice(e.target.value)} required min={0} step="0.01" />
 
       <input type="number" placeholder="Stock" value={stock} onChange={e => setStock(e.target.value)} required min={0} />
+
+      <select value={categoryId} onChange={e => setCategoryId(e.target.value)} required>
+        <option value="">Seleccione una categoría</option>
+        {categories.map(cat => (
+          <option key={cat.id} value={cat.id}>{cat.name}</option>
+        ))}
+      </select>
 
       <div style={{ display: 'flex', gap: '1rem' }}>
         <button type="submit" disabled={loading}>{loading ? 'Guardando...' : 'Guardar'}</button>
