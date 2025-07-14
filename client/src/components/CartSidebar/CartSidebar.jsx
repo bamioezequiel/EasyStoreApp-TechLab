@@ -1,29 +1,72 @@
 import { useState } from "react";
 import styles from "./CartSidebar.module.css";
 import PurchaseModal from "../PurchaseModal/PurchaseModal";
-import { useCart } from "../../context/CartContext"; // Importa el contexto
+import { useCart } from "../../context/CartContext";
+
+import {
+  createOrder,
+  addProductToOrder,
+  confirmOrder,
+} from "../../redux/feature/orders/ordersAPI";
 
 export default function CartSidebar() {
-  const { cart, removeFromCart, clearCart, itemCount } = useCart(); // Consume el contexto
+  const { cart, removeFromCart, clearCart, itemCount } = useCart();
 
   const [showModal, setShowModal] = useState(false);
   const [purchaseTotal, setPurchaseTotal] = useState(0);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [purchaseSuccess, setPurchaseSuccess] = useState(false);
+  const [purchaseError, setPurchaseError] = useState(null);
 
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-  const realizarCompra = () => {
+  const simulatePayment = () =>
+    new Promise((resolve) => setTimeout(() => resolve(true), 2000));
+
+  const realizarCompra = async () => {
     if (cart.length === 0) {
       alert("Tu carrito está vacío");
       return;
     }
+
     setPurchaseTotal(total);
+    setIsProcessing(true);
+    setPurchaseError(null);
+    setPurchaseSuccess(false);
     setShowModal(true);
-    // No vaciar carrito aquí para no perder la info hasta que cierre el modal
+
+    try {
+      // Simular pago
+      const paymentResult = await simulatePayment();
+      if (!paymentResult) throw new Error("El pago fue rechazado");
+
+      // 1. Crear orden sin token
+      const createdOrder = await createOrder();
+
+      if (!createdOrder?.id) throw new Error("No se pudo obtener el ID de la orden creada");
+
+      // 2. Agregar productos uno a uno a la orden
+      for (const item of cart) {
+        await addProductToOrder(createdOrder.id, item.id, item.quantity);
+      }
+
+      // 3. Confirmar la orden
+      await confirmOrder(createdOrder.id);
+
+      setPurchaseSuccess(true);
+      clearCart();
+    } catch (error) {
+      setPurchaseError(error.message || "Error al procesar la compra");
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const handleCloseModal = () => {
     setShowModal(false);
-    clearCart(); // Vacía el carrito cuando se cierra el modal
+    setPurchaseSuccess(false);
+    setPurchaseError(null);
+    setIsProcessing(false);
   };
 
   return (
@@ -70,17 +113,33 @@ export default function CartSidebar() {
             <strong>Total: ${total.toFixed(2)}</strong>
           </div>
           <div className={styles.cartActions}>
-            <button className="btn btn-danger btn-sm" onClick={clearCart} disabled={cart.length === 0}>
+            <button
+              className="btn btn-danger btn-sm"
+              onClick={clearCart}
+              disabled={cart.length === 0 || isProcessing}
+            >
               Vaciar
             </button>
-            <button className="btn btn-success" onClick={realizarCompra} disabled={cart.length === 0}>
-              Comprar
+            <button
+              className="btn btn-success"
+              onClick={realizarCompra}
+              disabled={cart.length === 0 || isProcessing}
+            >
+              {isProcessing ? "Procesando..." : "Comprar"}
             </button>
           </div>
         </footer>
       </section>
 
-      {showModal && <PurchaseModal total={purchaseTotal} onClose={handleCloseModal} />}
+      {showModal && (
+        <PurchaseModal
+          total={purchaseTotal}
+          onClose={handleCloseModal}
+          success={purchaseSuccess}
+          error={purchaseError}
+          processing={isProcessing}
+        />
+      )}
     </div>
   );
 }

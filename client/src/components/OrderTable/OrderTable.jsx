@@ -1,18 +1,35 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchOrders } from '../../redux/feature/orders/ordersSlice';
+import {
+  getAllOrders,
+  changeOrderStatusThunk,
+} from '../../redux/feature/orders/ordersSlice'; 
 import styles from './OrderTable.module.css';
+import OrderDetailsModal from '../OrderDetailsModal/OrderDetailsModal';
 
 export default function OrderTable() {
   const dispatch = useDispatch();
-  const { items: orders, status, error } = useSelector(state => state.orders);
+  const { orders, loading, error } = useSelector(state => state.orders);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const token = localStorage.getItem('token'); // o donde guardes el token
 
   useEffect(() => {
-    dispatch(fetchOrders());
-  }, [dispatch]);
+    if (token) {
+      dispatch(getAllOrders(token));
+    }
+  }, [dispatch, token]);
 
-  if (status === 'loading') return <p>Cargando órdenes...</p>;
-  if (status === 'failed') return <p>Error: {error}</p>;
+  const handleStatusChange = async (id, newStatus) => {
+    try {
+      await dispatch(changeOrderStatusThunk({ orderId: id, newStatus, token })).unwrap();
+      setSelectedOrder(null);
+    } catch (err) {
+      alert('Error al actualizar el estado');
+    }
+  };
+
+  if (loading) return <p>Cargando órdenes...</p>;
+  if (error) return <p>Error: {error}</p>;
 
   return (
     <div className={styles.container}>
@@ -32,14 +49,13 @@ export default function OrderTable() {
           {orders.map(order => (
             <tr key={order.id}>
               <td>{order.id}</td>
-              <td>${order.costTotal.toFixed(2)}</td>
+              <td>${order.costTotal?.toFixed(2) || '0.00'}</td>
               <td>{order.status}</td>
               <td>{order.items?.length || 0}</td>
               <td>
-                {/* Podés reemplazar esto con un modal si querés ver los productos */}
                 <button
                   className={styles.viewBtn}
-                  onClick={() => console.log('Ver detalles de orden', order.id)}
+                  onClick={() => setSelectedOrder(order)}
                 >
                   Ver Detalles
                 </button>
@@ -48,6 +64,14 @@ export default function OrderTable() {
           ))}
         </tbody>
       </table>
+
+      {selectedOrder && (
+        <OrderDetailsModal
+          order={selectedOrder}
+          onClose={() => setSelectedOrder(null)}
+          onStatusChange={handleStatusChange}
+        />
+      )}
     </div>
   );
 }

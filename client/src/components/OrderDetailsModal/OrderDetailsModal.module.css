@@ -1,0 +1,168 @@
+/* Fondo semitransparente detrás del modal */
+.modalBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+/* Contenedor del modal */
+.modal {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 2rem 2.5rem;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  position: relative;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+/* Títulos */
+.modal h3 {
+  margin-top: 0;
+  margin-bottom: 1.25rem;
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: #222;
+}
+
+.modal h4 {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: #444;
+}
+
+/* Grupo del select */
+.selectGroup {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.selectGroup label {
+  margin-bottom: 0.4rem;
+  font-weight: 600;
+  color: #555;
+  user-select: none;
+}
+
+.selectGroup select {
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  border: 1.5px solid #ccc;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+  outline: none;
+}
+
+.selectGroup select:focus {
+  border-color: #0077ff;
+  box-shadow: 0 0 5px rgba(0, 119, 255, 0.5);
+}
+
+/* Mensajes de éxito y error */
+.success {
+  color: #2a9d8f;
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+.error {
+  color: #e63946;
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+/* Lista de productos */
+.itemsList {
+  max-height: 180px;
+  overflow-y: auto;
+  padding-left: 1.2rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background-color: #fafafa;
+  font-size: 0.95rem;
+  color: #555;
+  user-select: none;
+}
+
+.itemsList li {
+  margin-bottom: 0.4rem;
+}
+
+/* Botones */
+.btnGroup {
+  margin-top: 1.8rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.confirmBtn,
+.cancelBtn {
+  cursor: pointer;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.55rem 1.25rem;
+  user-select: none;
+  transition: background-color 0.3s ease;
+}
+
+.confirmBtn {
+  background-color: #0077ff;
+  color: white;
+}
+
+.confirmBtn:hover:not(:disabled) {
+  background-color: #005fcc;
+}
+
+.confirmBtn:disabled {
+  background-color: #a3c0ff;
+  cursor: default;
+}
+
+.cancelBtn {
+  background-color: #ddd;
+  color: #333;
+}
+
+.cancelBtn:hover:not(:disabled) {
+  background-color: #bbb;
+}
+
+.cancelBtn:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .modal {
+    padding: 1.5rem 1.8rem;
+  }
+
+  .btnGroup {
+    flex-direction: column;
+  }
+
+  .confirmBtn,
+  .cancelBtn {
+    width: 100%;
+    padding: 0.75rem;
+  }
+}

@@ -155,3 +155,64 @@
     transform: scale(1);
   }
 }
+
+.statsContainer {
+  display: flex;
+  gap: 2rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+.statCard {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgb(0 0 0 / 0.1);
+  padding: 1.5rem 2rem;
+  display: flex;
+  align-items: center;
+  min-width: 220px;
+  transition: transform 0.3s ease;
+  cursor: default;
+}
+
+.statCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgb(0 0 0 / 0.15);
+}
+
+.statIcon {
+  font-size: 2.8rem;
+  color: #0077b6; /* azul, podés cambiar por tu color principal */
+  margin-right: 1.2rem;
+}
+
+.statTitle {
+  font-size: 1rem;
+  color: #555;
+  margin: 0 0 0.3rem 0;
+  font-weight: 600;
+}
+
+.statValue {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #023e8a; /* azul oscuro */
+}
+
+.backButton {
+  background-color: #0077b6;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 5px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.backButton:hover {
+  background-color: #005f87;
+}

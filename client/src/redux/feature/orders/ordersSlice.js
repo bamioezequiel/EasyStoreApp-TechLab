@@ -1,118 +1,136 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import * as orderAPI from './ordersAPI';
+import {
+  fetchAllOrders,
+  fetchOrderById,
+  createOrder,
+  changeOrderStatus,
+} from './ordersAPI';
 
-export const fetchOrders = createAsyncThunk(
-  'order/fetchAll',
+// Obtener todas las órdenes
+export const getAllOrders = createAsyncThunk(
+  'orders/getAll',
   async (_, thunkAPI) => {
     try {
-      const token = thunkAPI.getState().auth.user.token;
-      return await orderAPI.fetchAllOrders(token);
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.message);
+      return await fetchAllOrders();
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.message);
     }
   }
 );
 
-// addOrder con token
-export const addOrder = createAsyncThunk(
-  'order/add-order',
-  async (order, thunkAPI) => {
+// Obtener una orden por ID
+export const getOrderById = createAsyncThunk(
+  'orders/getById',
+  async ({ id }, thunkAPI) => {
     try {
-      const token = thunkAPI.getState().auth.user.token;
-      return await orderAPI.createOrder(order, token);
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.message);
+      return await fetchOrderById(id);
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.message);
     }
   }
 );
 
-// editOrder con token
-export const editOrder = createAsyncThunk(
-  'order/edit',
-  async ({ id, order }, thunkAPI) => {
+// Crear nueva orden
+export const postCreateOrder = createAsyncThunk(
+  'orders/create',
+  async (_, thunkAPI) => {
     try {
-      const token = thunkAPI.getState().auth.user.token;
-      return await orderAPI.updateOrder(id, order, token);
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.message);
+      return await createOrder();
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.message);
     }
   }
 );
 
-// removeOrder con token
-export const removeOrder = createAsyncThunk(
-  'order/remove',
-  async (id, thunkAPI) => {
+// Cambiar estado de una orden
+export const changeOrderStatusThunk = createAsyncThunk(
+  'orders/changeStatus',
+  async ({ orderId, newStatus }, thunkAPI) => {
     try {
-      const token = thunkAPI.getState().auth.user.token;
-      await orderAPI.deleteOrder(id, token);
-      return id;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.message);
+      return await changeOrderStatus(orderId, newStatus);
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.message);
     }
   }
 );
 
+// Estado inicial
+const initialState = {
+  orders: [],
+  selectedOrder: null,
+  loading: false,
+  error: null,
+};
+
+// Slice
 const orderSlice = createSlice({
-  name: 'order',
-  initialState: {
-    items: [],
-    status: 'idle',
-    error: null,
+  name: 'orders',
+  initialState,
+  reducers: {
+    clearSelectedOrder(state) {
+      state.selectedOrder = null;
+      state.error = null;
+    },
   },
-  reducers: {},
-  extraReducers(builder) {
+  extraReducers: (builder) => {
     builder
-      .addCase(fetchOrders.pending, (state) => {
-        state.status = 'loading';
+      .addCase(getAllOrders.pending, (state) => {
+        state.loading = true;
         state.error = null;
       })
-      .addCase(fetchOrders.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        state.items = action.payload;
+      .addCase(getAllOrders.fulfilled, (state, action) => {
+        state.loading = false;
+        state.orders = action.payload;
       })
-      .addCase(fetchOrders.rejected, (state, action) => {
-        state.status = 'failed';
+      .addCase(getAllOrders.rejected, (state, action) => {
+        state.loading = false;
         state.error = action.payload;
       })
-      .addCase(addOrder.pending, (state) => {
-        state.status = 'loading';
+
+      .addCase(getOrderById.pending, (state) => {
+        state.loading = true;
         state.error = null;
       })
-      .addCase(addOrder.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        state.items.push(action.payload);
+      .addCase(getOrderById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.selectedOrder = action.payload;
       })
-      .addCase(addOrder.rejected, (state, action) => {
-        state.status = 'failed';
+      .addCase(getOrderById.rejected, (state, action) => {
+        state.loading = false;
         state.error = action.payload;
       })
-      .addCase(editOrder.pending, (state) => {
-        state.status = 'loading';
+
+      .addCase(postCreateOrder.pending, (state) => {
+        state.loading = true;
         state.error = null;
       })
-      .addCase(editOrder.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        const index = state.items.findIndex((o) => o.id === action.payload.id);
-        if (index !== -1) state.items[index] = action.payload;
+      .addCase(postCreateOrder.fulfilled, (state, action) => {
+        state.loading = false;
+        state.orders.push(action.payload);
       })
-      .addCase(editOrder.rejected, (state, action) => {
-        state.status = 'failed';
+      .addCase(postCreateOrder.rejected, (state, action) => {
+        state.loading = false;
         state.error = action.payload;
       })
-      .addCase(removeOrder.pending, (state) => {
-        state.status = 'loading';
+
+      .addCase(changeOrderStatusThunk.pending, (state) => {
+        state.loading = true;
         state.error = null;
       })
-      .addCase(removeOrder.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        state.items = state.items.filter((o) => o.id !== action.payload);
+      .addCase(changeOrderStatusThunk.fulfilled, (state, action) => {
+        state.loading = false;
+        const updatedOrder = action.payload;
+        const index = state.orders.findIndex(order => order._id === updatedOrder._id);
+        if (index !== -1) {
+          state.orders[index] = updatedOrder;
+        }
       })
-      .addCase(removeOrder.rejected, (state, action) => {
-        state.status = 'failed';
+      .addCase(changeOrderStatusThunk.rejected, (state, action) => {
+        state.loading = false;
         state.error = action.payload;
       });
   },
 });
 
+export const { clearSelectedOrder } = orderSlice.actions;
 export default orderSlice.reducer;

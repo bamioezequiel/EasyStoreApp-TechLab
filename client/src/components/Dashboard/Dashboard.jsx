@@ -1,11 +1,11 @@
-// src/components/Dashboard/Dashboard.jsx
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../redux/feature/auth/authSlice';
+import { getAllOrders } from '../../redux/feature/orders/ordersSlice'; 
 
 import styles from './Dashboard.module.css';
-import { FaLinkedin, FaGlobe } from 'react-icons/fa';
+import { FaLinkedin, FaGlobe, FaCheckCircle, FaDollarSign, FaArrowLeft } from 'react-icons/fa';
 
 import ProductTable from '../ProductTable/ProductTable';
 import CategoryTable from '../CategoryTable/CategoryTable';
@@ -18,12 +18,27 @@ export default function Dashboard() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const { orders, loading: ordersLoading, error: ordersError } = useSelector(state => state.orders);
+
+  useEffect(() => {
+    if (orders.length === 0 && !ordersLoading) {
+      dispatch(getAllOrders());
+    }
+  }, [dispatch, orders.length, ordersLoading]);
+
+  const confirmedOrders = orders.filter(order => order.status === 'CONFIRMED');
+  const totalVendido = confirmedOrders.reduce((acc, order) => acc + (order.costTotal || 0), 0);
+
   const handleLogout = () => {
     setIsLoggingOut(true);
     setTimeout(() => {
       dispatch(logout());
       navigate('/login');
     }, 800);
+  };
+
+  const handleGoHome = () => {
+    navigate('/');
   };
 
   return (
@@ -85,12 +100,47 @@ export default function Dashboard() {
         </aside>
 
         <main className={styles.mainContent}>
+          {/* Botón Volver a Inicio */}
+          <button className={styles.backButton} onClick={handleGoHome}>
+            <FaArrowLeft style={{ marginRight: '0.5rem' }} />
+            Volver
+          </button>
+
           {activeSection === 'inicio' && (
             <>
               <h1>Bienvenido al Dashboard</h1>
               <p>Aquí puedes gestionar productos, usuarios, y más.</p>
+
+              <div className={styles.statsContainer}>
+                {ordersLoading && <p>Cargando órdenes...</p>}
+                {ordersError && <p>Error cargando órdenes: {ordersError}</p>}
+                {!ordersLoading && !ordersError && (
+                  confirmedOrders.length > 0 ? (
+                    <>
+                      <div className={styles.statCard}>
+                        <FaCheckCircle className={styles.statIcon} />
+                        <div>
+                          <p className={styles.statTitle}>Pedidos Confirmados</p>
+                          <p className={styles.statValue}>{confirmedOrders.length}</p>
+                        </div>
+                      </div>
+
+                      <div className={styles.statCard}>
+                        <FaDollarSign className={styles.statIcon} />
+                        <div>
+                          <p className={styles.statTitle}>Total Vendido</p>
+                          <p className={styles.statValue}>${totalVendido.toFixed(2)}</p>
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <p>No hay pedidos confirmados para mostrar.</p>
+                  )
+                )}
+              </div>
             </>
           )}
+
           {activeSection === 'productos' && <ProductTable />}
           {activeSection === 'usuarios' && <CategoryTable />}
           {activeSection === 'reportes' && <OrderTable />}

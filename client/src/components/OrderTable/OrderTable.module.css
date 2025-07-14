@@ -76,3 +76,17 @@ th {
   object-fit: cover;
   border-radius: 4px;
 }
+
+.viewBtn {
+  padding: 0.4rem 0.8rem;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.viewBtn:hover {
+  background-color: #115293;
+}
