@@ -24,9 +24,15 @@ console.log(productos);
     <section id="productos" className={`container my-5 ${styles.productSection}`}>
       <h2 className={styles.title}>Productos</h2>
       <div className={styles.productosContainer}>
-        {productos.map(prod => (
-          <ProductCard key={prod.id} product={prod} />
-        ))}
+        {productos.filter(prod => prod.stock > 0).length === 0 ? (
+          <p>No hay productos disponibles en este momento.</p>
+        ) : (
+          productos
+            .filter(prod => prod.stock > 0)
+            .map(prod => (
+              <ProductCard key={prod.id} product={prod} />
+            ))
+        )}
       </div>
     </section>
   );

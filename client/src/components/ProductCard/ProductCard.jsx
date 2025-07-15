@@ -17,6 +17,7 @@ export default function ProductCard({ product }) {
       image: product.imageUrl || DEFAULT_IMAGE,
       title: product.name,
       price: product.price,
+      stock: product.stock
     });
 
     setAdded(true);
@@ -69,8 +70,18 @@ export default function ProductCard({ product }) {
               onError={handleImageError}
             />
             <p>{product.description}</p>
-            <p className={styles.modalPrice}>
-              <strong>Precio:</strong> ${product.price.toFixed(2)}
+            <p className={styles.modalPrice}><strong>Precio:</strong> ${product.price.toFixed(2)}</p>
+            <p
+              className={styles.stock}
+              data-level={
+                product.stock === 1
+                  ? 'low'
+                  : product.stock < 5
+                  ? 'medium'
+                  : 'high'
+              }
+            >
+              {product.stock}
             </p>
             <button
               className={styles.btnClose}

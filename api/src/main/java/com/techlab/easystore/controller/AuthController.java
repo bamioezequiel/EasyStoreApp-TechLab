@@ -48,14 +48,11 @@ public class AuthController {
                     new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
             );
 
-            // Obtener usuario autenticado
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             User user = userDetails.getUser();
 
-            // Generar token con el username
             String token = jwtUtil.generateToken(user.getUsername(), user.getRole().getName());
 
-            // Devolver respuesta con info útil
             AuthResponse response = new AuthResponse(
                     user.getId(),
                     user.getUsername(),

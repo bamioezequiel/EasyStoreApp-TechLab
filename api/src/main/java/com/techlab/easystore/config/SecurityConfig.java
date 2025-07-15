@@ -23,7 +23,7 @@ import org.springframework.web.filter.CorsFilter;
 import java.util.List;
 
 @Configuration
-@EnableMethodSecurity // Habilita @PreAuthorize, @Secured, etc.
+@EnableMethodSecurity
 public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
@@ -41,7 +41,7 @@ public class SecurityConfig {
                 .cors(cors -> {}) // Habilita CORS
                 .authorizeHttpRequests(auth -> auth
 
-                        // RUTAS PÚBLICAS
+                        // RUTAS PUBLICAS
                         .requestMatchers("/api/auth/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
@@ -53,8 +53,6 @@ public class SecurityConfig {
                         .requestMatchers("/api/categories/**").authenticated()
                         .requestMatchers("/api/role/**").authenticated()
                         .requestMatchers("/api/auth/me").authenticated()
-
-                        // 📌 CUALQUIER OTRA
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

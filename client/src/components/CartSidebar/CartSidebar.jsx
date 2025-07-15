@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Swal from "sweetalert2";
 import styles from "./CartSidebar.module.css";
 import PurchaseModal from "../PurchaseModal/PurchaseModal";
 import { useCart } from "../../context/CartContext";
@@ -23,9 +24,21 @@ export default function CartSidebar() {
   const simulatePayment = () =>
     new Promise((resolve) => setTimeout(() => resolve(true), 2000));
 
-  const realizarCompra = async () => {
+  const showToast = (icon, title) => {
+    Swal.fire({
+      toast: true,
+      position: "top-end",
+      icon,
+      title,
+      showConfirmButton: false,
+      timer: 2500,
+      timerProgressBar: true,
+    });
+  };
+
+  const handlePurchase = async () => {
     if (cart.length === 0) {
-      alert("Tu carrito está vacío");
+      showToast("warning", "Tu carrito está vacío");
       return;
     }
 
@@ -36,33 +49,30 @@ export default function CartSidebar() {
     setShowModal(true);
 
     try {
-      // Simular pago
       const paymentResult = await simulatePayment();
       if (!paymentResult) throw new Error("El pago fue rechazado");
 
-      // 1. Crear orden sin token
       const createdOrder = await createOrder();
-
       if (!createdOrder?.id) throw new Error("No se pudo obtener el ID de la orden creada");
 
-      // 2. Agregar productos uno a uno a la orden
       for (const item of cart) {
         await addProductToOrder(createdOrder.id, item.id, item.quantity);
       }
 
-      // 3. Confirmar la orden
       await confirmOrder(createdOrder.id);
 
       setPurchaseSuccess(true);
       clearCart();
+      showToast("success", "Compra realizada con éxito");
     } catch (error) {
       setPurchaseError(error.message || "Error al procesar la compra");
+      showToast("error", error.message || "Error al procesar la compra");
     } finally {
       setIsProcessing(false);
     }
   };
 
-  const handleCloseModal = () => {
+  const closeModal = () => {
     setShowModal(false);
     setPurchaseSuccess(false);
     setPurchaseError(null);
@@ -122,7 +132,7 @@ export default function CartSidebar() {
             </button>
             <button
               className="btn btn-success"
-              onClick={realizarCompra}
+              onClick={handlePurchase}
               disabled={cart.length === 0 || isProcessing}
             >
               {isProcessing ? "Procesando..." : "Comprar"}
@@ -134,7 +144,7 @@ export default function CartSidebar() {
       {showModal && (
         <PurchaseModal
           total={purchaseTotal}
-          onClose={handleCloseModal}
+          onClose={closeModal}
           success={purchaseSuccess}
           error={purchaseError}
           processing={isProcessing}

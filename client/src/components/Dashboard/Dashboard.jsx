@@ -54,7 +54,7 @@ export default function Dashboard() {
 
       <div className={styles.dashboardContainer}>
         <aside className={styles.sidebar}>
-          <h2 className={styles.logo}>MiApp</h2>
+          <h2 className={styles.logo}>EasyStore</h2>
 
           <ul className={styles.menu}>
             <li
@@ -100,7 +100,6 @@ export default function Dashboard() {
         </aside>
 
         <main className={styles.mainContent}>
-          {/* Botón Volver a Inicio */}
           <button className={styles.backButton} onClick={handleGoHome}>
             <FaArrowLeft style={{ marginRight: '0.5rem' }} />
             Volver

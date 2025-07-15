@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
+import Swal from 'sweetalert2';
 
 const CartContext = createContext();
 
@@ -22,12 +23,39 @@ export function CartProvider({ children }) {
 
       if (existingIndex !== -1) {
         const newCart = [...prevCart];
+        const currentQuantity = newCart[existingIndex].quantity;
+
+        if (currentQuantity + 1 > product.stock) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Stock insuficiente',
+            text: 'No hay stock suficiente para este producto.',
+            timer: 2500,
+            showConfirmButton: false,
+            position: 'top-end',
+            toast: true,
+          });
+          return prevCart;
+        }
+
         newCart[existingIndex] = {
           ...newCart[existingIndex],
-          quantity: newCart[existingIndex].quantity + 1,
+          quantity: currentQuantity + 1,
         };
         return newCart;
       } else {
+        if (product.stock < 1) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Sin stock',
+            text: 'Producto sin stock disponible.',
+            timer: 2500,
+            showConfirmButton: false,
+            position: 'top-end',
+            toast: true,
+          });
+          return prevCart;
+        }
         return [...prevCart, { ...product, quantity: 1 }];
       }
     });
@@ -42,7 +70,6 @@ export function CartProvider({ children }) {
     setCart((prevCart) => prevCart.filter(item => item.id !== id));
   };
 
-  // Calculamos itemCount cada vez que cart cambia
   const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
