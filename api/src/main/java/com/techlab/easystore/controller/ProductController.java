@@ -27,6 +27,12 @@ public class ProductController {
         return productService.findAllProducts();
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<Product>> searchProductsByName(@RequestParam String name) {
+        List<Product> results = productService.findByNameContainingIgnoreCase(name);
+        return ResponseEntity.ok(results);
+    }
+
     @GetMapping("/{id}")
     public Product getProductById(@PathVariable Long id) {
         return productService.findProductByID(id);

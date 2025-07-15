@@ -1,5 +1,6 @@
 package com.techlab.easystore.service;
 
+import com.techlab.easystore.exception.StockInsufficientException;
 import com.techlab.easystore.model.LineItem;
 import com.techlab.easystore.model.Order;
 import com.techlab.easystore.model.Product;
@@ -63,7 +64,7 @@ public class OrderService {
 
     public Order addProductToOrder(Long orderId, Product product, int quantity) {
         if (product.getStock() < quantity)
-            throw new IllegalArgumentException("❌ Stock insuficiente. Solo hay " + product.getStock() + " unidades disponibles.");
+            throw new StockInsufficientException("❌ Stock insuficiente. Solo hay " + product.getStock() + " unidades disponibles.");
 
         Order order = this.findOrderById(orderId);
 

@@ -25,7 +25,10 @@ public class ProductService {
     public Product findProductByID(Long id) {
         return this.productRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado con ID: " + id));
+    }
 
+    public List<Product> findByNameContainingIgnoreCase(String name) {
+        return productRepository.findByNameContainingIgnoreCase(name);
     }
 
     public Product createProduct(Product p) {
