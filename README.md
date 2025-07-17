@@ -24,6 +24,13 @@
 - Inicio de sesión con roles (admin / usuario)
 - Seguridad con JWT (Spring Security)
 
+👤 Usuario de prueba
+Para probar la aplicación con permisos de administrador, podés usar el siguiente usuario:
+
+Usuario: admin
+
+Contraseña: admin123
+
 ### 📦 Gestión de Productos:
 - Listar, buscar, agregar, editar y eliminar productos
 - Asociación con categorías
